@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Magnificent 7 Wall Street Vegas Slot Machine with Live Twelve Data API",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js"
+    "start": "node dev-server.js",
+    "dev": "node dev-server.js"
   }
 }

@@ -687,10 +687,6 @@ function applyQuotesPayload(data, manualClick = false) {
   if (statusText) {
     statusText.textContent = `SYNCED ${timeStr}`;
   }
-  const hudBrand = document.querySelector('.hud-brand');
-  if (hudBrand) {
-    hudBrand.title = `Twelve Data Live (${mktState}) • Click to sync quotes`;
-  }
 
   const top = state.rankedStocks[0];
   if (manualClick) {
@@ -885,13 +881,6 @@ function initEvents() {
     updateLedDisplays();
     setStatusBanner('💵 +1,000 CREDITS DEPOSITED VIA BILL ACCEPTOR!');
   });
-
-  const brandBtn = document.querySelector('.hud-brand');
-  if (brandBtn) {
-    brandBtn.addEventListener('click', () => {
-      syncTwelveDataQuotes(true);
-    });
-  }
 
   const howToPlayBtn = document.getElementById('btnHowToPlay');
   if (howToPlayBtn) {

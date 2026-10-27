@@ -1,10 +1,15 @@
 const http = require('http');
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 
 const SYMBOLS = ['NVDA', 'TSLA', 'META', 'AMZN', 'MSFT', 'GOOGL', 'AAPL'];
 const MIN_REFRESH_COOLDOWN_MS = 60 * 1000; // 60s safety guard against accidental double-clicks (8 credits/min limit)
-const DISK_CACHE_PATH = path.join(__dirname, 'quotes-cache.json');
+const IS_VERCEL = Boolean(process.env.VERCEL);
+
+const DISK_CACHE_PATH = IS_VERCEL
+  ? path.join(os.tmpdir(), 'quotes-cache.json')
+  : path.join(__dirname, 'quotes-cache.json');
 const SNAPSHOT_JS_PATH = path.join(__dirname, 'quotes-snapshot.js');
 
 // Load persisted quote cache from disk if available
@@ -26,7 +31,7 @@ function loadDiskCache() {
 function saveDiskCache(cacheObj) {
   try {
     fs.writeFileSync(DISK_CACHE_PATH, JSON.stringify(cacheObj, null, 2), 'utf8');
-    if (cacheObj && cacheObj.payload) {
+    if (!IS_VERCEL && cacheObj && cacheObj.payload) {
       fs.writeFileSync(
         SNAPSHOT_JS_PATH,
         `window.__MAG7_CACHED_QUOTES__ = ${JSON.stringify(cacheObj.payload)};\n`,
@@ -34,7 +39,7 @@ function saveDiskCache(cacheObj) {
       );
     }
   } catch (_) {
-    // Ignore write errors
+    // Ignore write errors on read-only serverless filesystems
   }
 }
 
@@ -44,23 +49,26 @@ let quoteCache = loadDiskCache();
 function loadEnvLocal() {
   const envPath = path.join(__dirname, '.env.local');
   const env = {};
-  if (!fs.existsSync(envPath)) return env;
-
-  const content = fs.readFileSync(envPath, 'utf8');
-  for (const rawLine of content.split(/\r?\n/)) {
-    const line = rawLine.trim();
-    if (!line || line.startsWith('#')) continue;
-    const eqIdx = line.indexOf('=');
-    if (!eqIdx || eqIdx === -1) continue;
-    const key = line.slice(0, eqIdx).trim();
-    let val = line.slice(eqIdx + 1).trim();
-    if (
-      (val.startsWith('"') && val.endsWith('"')) ||
-      (val.startsWith("'") && val.endsWith("'"))
-    ) {
-      val = val.slice(1, -1);
+  try {
+    if (!fs.existsSync(envPath)) return env;
+    const content = fs.readFileSync(envPath, 'utf8');
+    for (const rawLine of content.split(/\r?\n/)) {
+      const line = rawLine.trim();
+      if (!line || line.startsWith('#')) continue;
+      const eqIdx = line.indexOf('=');
+      if (!eqIdx || eqIdx === -1) continue;
+      const key = line.slice(0, eqIdx).trim();
+      let val = line.slice(eqIdx + 1).trim();
+      if (
+        (val.startsWith('"') && val.endsWith('"')) ||
+        (val.startsWith("'") && val.endsWith("'"))
+      ) {
+        val = val.slice(1, -1);
+      }
+      env[key] = val;
     }
-    env[key] = val;
+  } catch (_) {
+    // Ignore read errors
   }
   return env;
 }
@@ -68,9 +76,9 @@ function loadEnvLocal() {
 function getApiKey() {
   const localEnv = loadEnvLocal();
   return (
+    process.env.TWELVE_DATA_API_KEY ||
     localEnv.TWELVE_DATA_API_KEY ||
     localEnv.VITE_TWELVE_DATA_API_KEY ||
-    process.env.TWELVE_DATA_API_KEY ||
     ''
   ).trim();
 }
@@ -80,14 +88,13 @@ async function fetchTwelveDataQuotes(forceRefresh = false) {
   if (!apiKey || apiKey === 'your_twelve_data_api_key_here') {
     return {
       status: 'missing_key',
-      message: 'Add your TWELVE_DATA_API_KEY in .env.local to enable live Twelve Data quotes.'
+      message: 'Add your TWELVE_DATA_API_KEY in Vercel Environment Variables (or .env.local).'
     };
   }
 
   const now = Date.now();
 
-  // If not explicitly syncing (e.g. just loading/refreshing the page) and we already have a saved snapshot,
-  // serve the saved snapshot for 0 API credits!
+  // If not explicitly syncing and we already have a saved snapshot, serve it for 0 API credits
   if (!forceRefresh && quoteCache.payload) {
     return {
       ...quoteCache.payload,
@@ -113,7 +120,6 @@ async function fetchTwelveDataQuotes(forceRefresh = false) {
   const res = await fetch(url);
   const data = await res.json();
 
-  // Check for top-level Twelve Data error (e.g. 401 invalid key or 429 rate limit)
   if (data.status === 'error' || data.code) {
     if (quoteCache.payload) {
       return {
@@ -144,7 +150,6 @@ async function fetchTwelveDataQuotes(forceRefresh = false) {
 
     if (item.is_market_open) anyMarketOpen = true;
 
-    // Calculate intraday range volatility factor (1.05 to 2.20)
     const intradayRangePct = open > 0 ? ((high - low) / open) * 100 : Math.abs(changePct);
     const volatility = Math.max(1.05, Math.min(2.2, Number((1.0 + intradayRangePct * 0.15).toFixed(2))));
 
@@ -196,8 +201,8 @@ const MIME_TYPES = {
   '.ico': 'image/x-icon'
 };
 
-const server = http.createServer(async (req, res) => {
-  const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+async function requestHandler(req, res) {
+  const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
 
   // API Endpoint: GET /api/quotes (pass ?refresh=1 to force a live Twelve Data sync)
   if (parsedUrl.pathname === '/api/quotes') {
@@ -215,6 +220,13 @@ const server = http.createServer(async (req, res) => {
       res.writeHead(500, corsHeaders);
       res.end(JSON.stringify({ status: 'error', message: err.message }));
     }
+    return;
+  }
+
+  // Optional empty fallback for quotes-snapshot.js when running on Vercel
+  if (parsedUrl.pathname === '/quotes-snapshot.js' && !fs.existsSync(SNAPSHOT_JS_PATH)) {
+    res.writeHead(200, { 'Content-Type': 'application/javascript; charset=utf-8' });
+    res.end('window.__MAG7_CACHED_QUOTES__ = null;\n');
     return;
   }
 
@@ -240,27 +252,34 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(200, { 'Content-Type': MIME_TYPES[ext] || 'application/octet-stream' });
     res.end(content);
   });
-});
+}
 
-const env = loadEnvLocal();
-const PORT = Number(env.PORT || process.env.PORT || 3000);
+// Export requestHandler for Vercel Serverless Node.js entrypoint
+module.exports = requestHandler;
 
-server.listen(PORT, async () => {
-  console.log(`\n🎰 MAG 7 JACKPOT Server running at http://localhost:${PORT}`);
-  console.log(`🔑 On-demand Twelve Data sync enabled (.env.local)`);
-  if (!quoteCache.payload) {
-    console.log(`🌐 Fetching initial Magnificent 7 quotes from Twelve Data...`);
-    try {
-      const res = await fetchTwelveDataQuotes(true);
-      if (res.status === 'live') {
-        console.log(`✅ Synced ${res.quotes.length} stocks! Saved to quotes-cache.json & quotes-snapshot.js\n`);
-      } else {
-        console.log(`⚠️ Twelve Data response: ${res.message}\n`);
+// Start local HTTP server when run directly via `node server.js`
+if (!IS_VERCEL) {
+  const env = loadEnvLocal();
+  const PORT = Number(env.PORT || process.env.PORT || 3000);
+  const server = http.createServer(requestHandler);
+
+  server.listen(PORT, async () => {
+    console.log(`\n🎰 MAG 7 JACKPOT Server running at http://localhost:${PORT}`);
+    console.log(`🔑 On-demand Twelve Data sync enabled (.env.local)`);
+    if (!quoteCache.payload) {
+      console.log(`🌐 Fetching initial Magnificent 7 quotes from Twelve Data...`);
+      try {
+        const res = await fetchTwelveDataQuotes(true);
+        if (res.status === 'live') {
+          console.log(`✅ Synced ${res.quotes.length} stocks! Saved to quotes-cache.json & quotes-snapshot.js\n`);
+        } else {
+          console.log(`⚠️ Twelve Data response: ${res.message}\n`);
+        }
+      } catch (err) {
+        console.log(`⚠️ Initial sync failed: ${err.message}\n`);
       }
-    } catch (err) {
-      console.log(`⚠️ Initial sync failed: ${err.message}\n`);
+    } else {
+      console.log(`📦 Loaded cached snapshot from ${quoteCache.payload.updatedAt}\n`);
     }
-  } else {
-    console.log(`📦 Loaded cached snapshot from ${quoteCache.payload.updatedAt}\n`);
-  }
-});
+  });
+}

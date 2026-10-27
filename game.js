@@ -717,11 +717,8 @@ async function syncTwelveDataQuotes(manualClick = false) {
       setStatusBanner('🌐 FETCHING LIVE MAG 7 QUOTES FROM TWELVE DATA...');
     }
 
-    // Support both http://localhost:3000 and opening index.html directly via file://
-    const apiBase =
-      window.location.protocol === 'file:' || window.location.port !== '3000'
-        ? 'http://localhost:3000'
-        : '';
+    // Support http://localhost:3000, https://slot-market.vercel.app, and file://
+    const apiBase = window.location.protocol === 'file:' ? 'http://localhost:3000' : '';
     const endpoint = `${apiBase}/api/quotes${manualClick ? '?refresh=1' : ''}`;
 
     const res = await fetch(endpoint);

@@ -12,6 +12,31 @@ const DISK_CACHE_PATH = IS_VERCEL
   : path.join(__dirname, 'quotes-cache.json');
 const SNAPSHOT_JS_PATH = path.join(__dirname, 'quotes-snapshot.js');
 
+// Static file map with literal path.join(__dirname, ...) so Vercel's Node File Tracer bundles them
+const BUNDLED_STATIC_FILES = {
+  '/': { file: path.join(__dirname, 'index.html'), type: 'text/html; charset=utf-8' },
+  '/index.html': { file: path.join(__dirname, 'index.html'), type: 'text/html; charset=utf-8' },
+  '/styles.css': { file: path.join(__dirname, 'styles.css'), type: 'text/css; charset=utf-8' },
+  '/game.js': { file: path.join(__dirname, 'game.js'), type: 'application/javascript; charset=utf-8' }
+};
+
+// Default seed snapshot from Twelve Data (Oct 27, 2026 close) so cold starts use 0 API calls
+const DEFAULT_LIVE_SNAPSHOT = {
+  status: 'live',
+  cached: true,
+  updatedAt: '2026-10-27T21:49:12.304Z',
+  marketOpen: false,
+  quotes: [
+    { id: 'NVDA', name: 'NVIDIA Corporation', price: 217.94, changePct: 0.9, volatility: 1.25, isMarketOpen: false, datetime: '2026-10-27' },
+    { id: 'TSLA', name: 'Tesla, Inc.', price: 407.46, changePct: 4.04, volatility: 1.5, isMarketOpen: false, datetime: '2026-10-27' },
+    { id: 'META', name: 'Meta Platforms Inc.', price: 620.19, changePct: -1.64, volatility: 1.22, isMarketOpen: false, datetime: '2026-10-27' },
+    { id: 'AMZN', name: 'Amazon.com Inc.', price: 253.1, changePct: 1.61, volatility: 1.36, isMarketOpen: false, datetime: '2026-10-27' },
+    { id: 'MSFT', name: 'Microsoft Corporation', price: 531.33, changePct: -0.24, volatility: 1.18, isMarketOpen: false, datetime: '2026-10-27' },
+    { id: 'GOOGL', name: 'Alphabet Inc.', price: 320.58, changePct: 1.19, volatility: 1.33, isMarketOpen: false, datetime: '2026-10-27' },
+    { id: 'AAPL', name: 'Apple Inc.', price: 347.1, changePct: 0.93, volatility: 1.24, isMarketOpen: false, datetime: '2026-10-27' }
+  ]
+};
+
 // Load persisted quote cache from disk if available
 function loadDiskCache() {
   try {
@@ -25,7 +50,7 @@ function loadDiskCache() {
   } catch (_) {
     // Ignore corrupted cache file
   }
-  return { timestamp: 0, payload: null };
+  return { timestamp: 0, payload: DEFAULT_LIVE_SNAPSHOT };
 }
 
 function saveDiskCache(cacheObj) {
@@ -230,7 +255,22 @@ async function requestHandler(req, res) {
     return;
   }
 
-  // Serve Static Files
+  // Serve Bundled Static Files (traced by @vercel/nft)
+  const bundled = BUNDLED_STATIC_FILES[parsedUrl.pathname];
+  if (bundled) {
+    fs.readFile(bundled.file, (err, content) => {
+      if (err) {
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('Not found');
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': bundled.type });
+      res.end(content);
+    });
+    return;
+  }
+
+  // Serve Any Other Static Files
   let reqPath = parsedUrl.pathname === '/' ? '/index.html' : parsedUrl.pathname;
   const safePath = path.normalize(reqPath).replace(/^(\.\.[/\\])+/, '');
   const baseName = path.basename(safePath);

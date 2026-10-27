@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MAG 7 JACKPOT — Wall Street Casino Slot Machine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Orbitron:wght@600;800;900&family=Rajdhani:wght@600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Blurred Casino Floor Background -->
+  <div class="casino-backdrop">
+    <div class="chandelier chandelier-1"></div>
+    <div class="chandelier chandelier-2"></div>
+    <div class="bg-bokeh"></div>
+  </div>
+
+  <!-- Top Floating Controls (Audio, Market Feed, Paytable) -->
+  <header class="hud-bar">
+    <div class="hud-brand">
+      <span class="live-dot" id="marketStatusDot"></span>
+      <span id="marketStatusText">NASDAQ LIVE SIM • VOLATILITY MULTIPLIERS ACTIVE</span>
+    </div>
+    <div class="hud-actions">
+      <button class="hud-btn" id="btnSyncLive" title="Fetch latest live quotes from Twelve Data (.env.local)">
+        🔄 Sync 12 Data
+      </button>
+      <button class="hud-btn" id="btnCatalyst" title="Trigger a random Wall Street market event">
+        ⚡ Market Event
+      </button>
+      <button class="hud-btn" id="btnPaytable" title="View all 7 stocks & payout rules">
+        📊 Mag 7 Rankings
+      </button>
+      <button class="hud-btn" id="btnSound" title="Toggle Casino Audio">
+        🔊 Sound: ON
+      </button>
+    </div>
+  </header>
+
+  <!-- Live Scrolling Stock Ticker Tape -->
+  <div class="ticker-tape-wrap">
+    <div class="ticker-tape" id="tickerTape"></div>
+  </div>
+
+  <!-- Main Physical Slot Machine Cabinet -->
+  <main class="stage">
+    <div class="slot-cabinet" id="slotCabinet">
+
+      <!-- Top Siren Beacon Light -->
+      <div class="siren-tower" id="sirenTower">
+        <div class="siren-cap"></div>
+        <div class="siren-glass">
+          <div class="siren-core"></div>
+        </div>
+        <div class="siren-base"></div>
+      </div>
+
+      <!-- Upper Marquee Sign ("JACKPOT") -->
+      <section class="marquee-housing">
+        <div class="marquee-bulb-ring" id="marqueeBulbs"></div>
+        <div class="marquee-inner">
+          <div class="marquee-rays"></div>
+          <div class="marquee-crown-row">
+            <span class="coin-stack left-coins">🪙</span>
+            <svg class="crown-svg" viewBox="0 0 120 75" aria-hidden="true">
+              <defs>
+                <linearGradient id="crownGold" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#fff6a9" />
+                  <stop offset="45%" stop-color="#f7b500" />
+                  <stop offset="100%" stop-color="#9c5500" />
+                </linearGradient>
+              </defs>
+              <path d="M10 62 L20 22 L42 44 L60 12 L78 44 L100 22 L110 62 Z" fill="url(#crownGold)" stroke="#fff2b2" stroke-width="2.5"/>
+              <rect x="10" y="62" width="100" height="9" rx="4" fill="url(#crownGold)" stroke="#fff2b2" stroke-width="1.5"/>
+              <circle cx="20" cy="18" r="5" fill="#fff6a9" />
+              <circle cx="60" cy="8" r="6" fill="#fff6a9" />
+              <circle cx="100" cy="18" r="5" fill="#fff6a9" />
+              <circle cx="60" cy="48" r="5" fill="#d90429" />
+              <circle cx="36" cy="52" r="4" fill="#00b4d8" />
+              <circle cx="84" cy="52" r="4" fill="#00b4d8" />
+            </svg>
+            <span class="coin-stack right-coins">🪙</span>
+          </div>
+          <div class="marquee-banner">
+            <div class="marquee-subtitle">WALL STREET MAGNIFICENT 7</div>
+            <h1 class="marquee-title">JACKPOT</h1>
+          </div>
+        </div>
+      </section>
+
+      <!-- Main Upper & Center Cabinet Body -->
+      <div class="cabinet-body">
+        <!-- Left & Right Vertical Neon Light Strips -->
+        <div class="side-neon left-neon"></div>
+        <div class="side-neon right-neon"></div>
+
+        <!-- Upper Tiered Payout Display (Grand / Major / Minor / Mini) -->
+        <section class="jackpot-board" aria-label="Dynamic Jackpot Tiers">
+          <!-- GRAND TIER -->
+          <div class="tier-row tier-grand" id="tierRow-grand">
+            <div class="tier-symbols" id="tierSymbols-grand"></div>
+            <div class="tier-box">
+              <div class="tier-header">
+                <span class="tier-label">GRAND</span>
+                <span class="tier-mult" id="tierMult-grand">#1 LEADER</span>
+              </div>
+              <div class="tier-amount" id="tierAmount-grand">$1,250,000.00</div>
+            </div>
+          </div>
+
+          <!-- MAJOR TIER -->
+          <div class="tier-row tier-major" id="tierRow-major">
+            <div class="tier-symbols" id="tierSymbols-major"></div>
+            <div class="tier-box">
+              <div class="tier-header">
+                <span class="tier-label">MAJOR</span>
+                <span class="tier-mult" id="tierMult-major">#2–#3 MOMENTUM</span>
+              </div>
+              <div class="tier-amount" id="tierAmount-major">$100,000.00</div>
+            </div>
+          </div>
+
+          <!-- MINOR TIER -->
+          <div class="tier-row tier-minor" id="tierRow-minor">
+            <div class="tier-symbols" id="tierSymbols-minor"></div>
+            <div class="tier-box">
+              <div class="tier-header">
+                <span class="tier-label">MINOR</span>
+                <span class="tier-mult" id="tierMult-minor">#4–#5 MID-CAP</span>
+              </div>
+              <div class="tier-amount" id="tierAmount-minor">$10,000.00</div>
+            </div>
+          </div>
+
+          <!-- MINI TIER -->
+          <div class="tier-row tier-mini" id="tierRow-mini">
+            <div class="tier-symbols" id="tierSymbols-mini"></div>
+            <div class="tier-box">
+              <div class="tier-header">
+                <span class="tier-label">MINI</span>
+                <span class="tier-mult" id="tierMult-mini">#6–#7 VALUE</span>
+              </div>
+              <div class="tier-amount" id="tierAmount-mini">$1,000.00</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Center 3-Reel Window -->
+        <section class="reel-housing">
+          <div class="reel-frame">
+            <!-- Payline Center Indicator Arrows & Glow Line -->
+            <div class="payline-arrow left-arrow">▶</div>
+            <div class="payline-beam" id="paylineBeam"></div>
+            <div class="payline-arrow right-arrow">◀</div>
+
+            <div class="reels-grid">
+              <!-- Reel 1 -->
+              <div class="reel-drum" id="reelDrum0">
+                <div class="reel-strip" id="reelStrip0"></div>
+                <div class="reel-cylinder-gloss"></div>
+              </div>
+              <div class="reel-divider"></div>
+
+              <!-- Reel 2 -->
+              <div class="reel-drum" id="reelDrum1">
+                <div class="reel-strip" id="reelStrip1"></div>
+                <div class="reel-cylinder-gloss"></div>
+              </div>
+              <div class="reel-divider"></div>
+
+              <!-- Reel 3 -->
+              <div class="reel-drum" id="reelDrum2">
+                <div class="reel-strip" id="reelStrip2"></div>
+                <div class="reel-cylinder-gloss"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Status Banner Below Reels -->
+          <div class="status-ticker" id="statusBanner">
+            PRESS <span class="highlight">SPIN</span> OR <span class="highlight">SPACE</span> — MATCH MAG 7 TICKERS ON THE CENTER PAYLINE!
+          </div>
+        </section>
+
+        <!-- Red 7-Segment LED Displays (CREDITS | BET | WIN) -->
+        <section class="led-panel" aria-label="Game Counters">
+          <div class="led-group led-credits">
+            <div class="led-title">CREDITS</div>
+            <div class="led-screen">
+              <span class="led-ghost">888888</span>
+              <span class="led-value" id="ledCredits">1250</span>
+            </div>
+          </div>
+
+          <div class="led-group led-bet">
+            <div class="led-title">BET</div>
+            <div class="led-screen">
+              <span class="led-ghost">888</span>
+              <span class="led-value" id="ledBet">50</span>
+            </div>
+          </div>
+
+          <div class="led-group led-win">
+            <div class="led-title">WIN</div>
+            <div class="led-screen">
+              <span class="led-ghost">888888</span>
+              <span class="led-value" id="ledWin">0</span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Angled Physical Control Deck (BET ONE, BET MAX, CASH OUT, SPIN) -->
+      <section class="control-deck">
+        <div class="deck-surface">
+          <div class="square-buttons">
+            <button class="deck-btn" id="btnBetOne" type="button">
+              <span class="btn-cap">BET<br>ONE</span>
+            </button>
+            <button class="deck-btn" id="btnBetMax" type="button">
+              <span class="btn-cap">BET<br>MAX</span>
+            </button>
+            <button class="deck-btn" id="btnCashOut" type="button">
+              <span class="btn-cap">CASH<br>OUT</span>
+            </button>
+          </div>
+
+          <div class="spin-button-well">
+            <button class="spin-btn" id="btnSpin" type="button" aria-label="Spin Reels">
+              <span class="spin-cap">SPIN</span>
+            </button>
+          </div>
+        </div>
+        <div class="deck-chrome-lip"></div>
+      </section>
+
+      <!-- Lower Cabinet Base & Glowing Blue Bill Acceptor -->
+      <section class="cabinet-lower">
+        <div class="coin-tray-bay">
+          <div class="payout-chute">
+            <div class="chute-label">MAG-7 SECURITIES VAULT</div>
+          </div>
+        </div>
+
+        <button class="bill-acceptor" id="btnInsertBill" type="button" title="Click to insert $1,000 in trading credits">
+          <div class="bill-label">INSERT BILL / TICKET</div>
+          <div class="bill-slot-bezel">
+            <div class="bill-slot-mouth"></div>
+            <div class="bill-slot-arrows">▲ ▲ ▲ +1,000 CREDITS ▲ ▲ ▲</div>
+          </div>
+        </button>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Modal: Mag 7 Live Rankings & Paytable -->
+  <div class="modal-backdrop hidden" id="paytableModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>📈 MAGNIFICENT 7 DYNAMIC PAYTABLE</h2>
+        <button class="modal-close" id="closePaytable">&times;</button>
+      </div>
+      <p class="modal-desc">
+        Stocks are dynamically ranked into the <strong>GRAND, MAJOR, MINOR, and MINI</strong> jackpot tiers based on their real-time daily % performance and volatility multiplier. Hotter stocks climb to higher tiers and apply a live multiplier boost!
+      </p>
+      <div class="paytable-grid" id="paytableGrid"></div>
+      <div class="combo-rules">
+        <h3>Additional Winning Combos (Scaled by Bet & Stock Multiplier)</h3>
+        <ul>
+          <li><strong>3-of-a-Kind (Any Mag 7):</strong> Triggers that stock's active Tier Jackpot (Grand / Major / Minor / Mini) × Stock Volatility Multiplier!</li>
+          <li><strong>3 Same-Tier Mixed (e.g. AAPL + MSFT + AAPL):</strong> Pays <strong>15× Bet</strong> × Average Stock Multiplier.</li>
+          <li><strong>Any 2 Matching Tickers (Pair on Payline):</strong> Pays <strong>3× Bet</strong> × Matched Stock Multiplier.</li>
+          <li><strong>"AI Trio" Bonus (NVDA + MSFT + GOOGL in any order):</strong> Pays <strong>25× Bet</strong>!</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Cash Out Voucher ("TITO Casino Ticket") -->
+  <div class="modal-backdrop hidden" id="cashoutModal">
+    <div class="voucher-ticket">
+      <div class="voucher-border">
+        <div class="voucher-top">WALL STREET CASINO &bull; LAS VEGAS, NV</div>
+        <div class="voucher-title">CASH OUT PORTFOLIO VOUCHER</div>
+        <div class="voucher-amount" id="voucherAmount">$1,250.00</div>
+        <div class="voucher-meta" id="voucherMeta">TICKET #00492-NVDA &bull; REDEEMABLE AT CASHIER</div>
+        <div class="voucher-barcode">||| | |||| || | ||| |||| | || |||| | |||</div>
+        <div class="voucher-actions">
+          <button class="voucher-btn primary" id="btnRedeemKeepPlaying">RE-DEPOSIT &amp; KEEP PLAYING</button>
+          <button class="voucher-btn" id="btnResetFresh">NEW SESSION (1,250 CREDITS)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="quotes-snapshot.js" onerror="window.__MAG7_CACHED_QUOTES__=null"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,1206 @@
+:root {
+  --gold-bright: #fff3a1;
+  --gold-mid: #f5b700;
+  --gold-deep: #9e5800;
+  --chrome-light: #e5e7eb;
+  --chrome-dark: #1f242d;
+  --neon-amber: #ff9e2c;
+  --neon-red: #ff2a2a;
+  --led-red: #ff2e1f;
+  --led-dim: rgba(255, 38, 18, 0.12);
+  --bill-blue: #00a8ff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+body {
+  min-height: 100vh;
+  background-color: #0b0504;
+  color: #fff;
+  font-family: 'Rajdhani', sans-serif;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Blurred Vegas Casino Background */
+.casino-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 75% 12%, rgba(255, 196, 87, 0.38) 0%, transparent 34%),
+    radial-gradient(circle at 88% 36%, rgba(255, 175, 65, 0.25) 0%, transparent 28%),
+    radial-gradient(circle at 18% 45%, rgba(220, 38, 38, 0.22) 0%, transparent 40%),
+    radial-gradient(circle at 50% 55%, #2a100c 0%, #090406 85%);
+  overflow: hidden;
+}
+
+.chandelier {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(22px);
+  opacity: 0.7;
+  animation: chandelierGlow 5s ease-in-out infinite alternate;
+}
+
+.chandelier-1 {
+  width: 340px;
+  height: 180px;
+  top: -30px;
+  right: 12%;
+  background: radial-gradient(circle, #fff3b0 0%, #ff9900 55%, transparent 75%);
+}
+
+.chandelier-2 {
+  width: 240px;
+  height: 130px;
+  top: 22%;
+  right: 4%;
+  background: radial-gradient(circle, #ffe89e 0%, #ff8800 55%, transparent 75%);
+  animation-delay: 1.5s;
+}
+
+@keyframes chandelierGlow {
+  0% { transform: scale(0.97); opacity: 0.62; }
+  100% { transform: scale(1.04); opacity: 0.82; }
+}
+
+/* Top HUD Bar */
+.hud-bar {
+  width: 100%;
+  max-width: 980px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  z-index: 10;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hud-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(15, 10, 12, 0.82);
+  border: 1px solid rgba(245, 183, 0, 0.35);
+  padding: 5px 12px;
+  border-radius: 999px;
+  letter-spacing: 0.06em;
+  color: #fde68a;
+  font-weight: 700;
+}
+
+.live-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 10px #10b981;
+  animation: pulseDot 1.4s infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.35); opacity: 0.55; }
+}
+
+.hud-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.hud-btn {
+  background: linear-gradient(180deg, #2a1d17, #140c0a);
+  color: #fde68a;
+  border: 1px solid rgba(245, 183, 0, 0.45);
+  border-radius: 6px;
+  padding: 5px 11px;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.hud-btn:hover {
+  border-color: #fff3a1;
+  box-shadow: 0 0 10px rgba(245, 183, 0, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Scrolling Live Stock Ticker Tape */
+.ticker-tape-wrap {
+  width: 100%;
+  background: rgba(8, 6, 10, 0.92);
+  border-top: 1px solid rgba(255, 185, 40, 0.28);
+  border-bottom: 1px solid rgba(255, 185, 40, 0.28);
+  overflow: hidden;
+  padding: 4px 0;
+  margin-bottom: 6px;
+}
+
+.ticker-tape {
+  display: flex;
+  gap: 28px;
+  white-space: nowrap;
+  animation: tickerScroll 26s linear infinite;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.84rem;
+}
+
+@keyframes tickerScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ticker-sym {
+  font-weight: 700;
+  color: #fff;
+}
+
+.ticker-up {
+  color: #22c55e;
+}
+
+.ticker-down {
+  color: #ef4444;
+}
+
+.ticker-mult-pill {
+  background: rgba(245, 183, 0, 0.18);
+  border: 1px solid rgba(245, 183, 0, 0.45);
+  color: #fde047;
+  padding: 0 5px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+}
+
+/* Main Stage & Physical Slot Machine Cabinet */
+.stage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px 12px 24px;
+  width: 100%;
+}
+
+.slot-cabinet {
+  width: 470px;
+  max-width: 96vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  filter: drop-shadow(0 22px 45px rgba(0, 0, 0, 0.95));
+}
+
+/* Siren Light on Top */
+.siren-tower {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: -4px;
+  z-index: 3;
+}
+
+.siren-cap {
+  width: 44px;
+  height: 7px;
+  border-radius: 6px 6px 0 0;
+  background: linear-gradient(90deg, #555, #eee, #444);
+}
+
+.siren-glass {
+  width: 42px;
+  height: 28px;
+  background: linear-gradient(90deg, rgba(255, 30, 30, 0.65), rgba(255, 140, 140, 0.9), rgba(200, 0, 0, 0.7));
+  border-left: 2px solid rgba(255, 255, 255, 0.5);
+  border-right: 2px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 16px rgba(255, 40, 40, 0.55);
+  position: relative;
+  overflow: hidden;
+}
+
+.siren-core {
+  width: 16px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 14px #fff, 0 0 24px #ff1e1e;
+  opacity: 0.65;
+}
+
+.siren-tower.siren-active .siren-glass {
+  animation: sirenFlash 0.25s infinite alternate;
+}
+
+@keyframes sirenFlash {
+  0% {
+    box-shadow: 0 0 25px #ff1e1e, 0 0 60px #ff0000;
+    filter: brightness(1.4);
+  }
+  100% {
+    box-shadow: 0 0 25px #38bdf8, 0 0 60px #0284c7;
+    filter: hue-rotate(200deg) brightness(1.4);
+  }
+}
+
+.siren-base {
+  width: 54px;
+  height: 10px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #1e293b, #94a3b8, #0f172a);
+  border-top: 1px solid #cbd5e1;
+}
+
+/* Marquee Housing ("JACKPOT") */
+.marquee-housing {
+  width: 94%;
+  border-radius: 26px 26px 14px 14px;
+  padding: 11px;
+  background: linear-gradient(145deg, #581c0c 0%, #1c0804 50%, #4d190b 100%);
+  border: 3px solid #d97706;
+  box-shadow:
+    0 0 24px rgba(255, 115, 0, 0.45),
+    inset 0 0 12px rgba(255, 196, 0, 0.6);
+  position: relative;
+  z-index: 4;
+}
+
+.marquee-bulb-ring {
+  position: absolute;
+  inset: 3px;
+  border-radius: 22px 22px 11px 11px;
+  pointer-events: none;
+  border: 3px dotted #fde047;
+  filter: drop-shadow(0 0 5px #f59e0b);
+  animation: bulbChase 0.9s steps(2) infinite;
+}
+
+@keyframes bulbChase {
+  0% { border-color: #fef08a; filter: drop-shadow(0 0 6px #f59e0b); }
+  50% { border-color: #f97316; filter: drop-shadow(0 0 9px #ef4444); }
+}
+
+.marquee-inner {
+  position: relative;
+  border-radius: 17px 17px 8px 8px;
+  background:
+    radial-gradient(circle at 50% 60%, #991b1b 0%, #450a0a 60%, #1a0303 100%);
+  border: 2px solid #fbbf24;
+  padding: 10px 14px 12px;
+  text-align: center;
+  overflow: hidden;
+  box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.85);
+}
+
+.marquee-rays {
+  position: absolute;
+  inset: -60%;
+  background: repeating-conic-gradient(
+    from 0deg,
+    rgba(255, 204, 0, 0.16) 0deg 8deg,
+    transparent 8deg 16deg
+  );
+  animation: spinRays 24s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes spinRays {
+  to { transform: rotate(360deg); }
+}
+
+.marquee-crown-row {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 10px;
+  margin-bottom: -6px;
+}
+
+.crown-svg {
+  width: 82px;
+  height: 50px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.8));
+}
+
+.coin-stack {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.85));
+}
+
+.marquee-banner {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(180deg, #5c0f08 0%, #2a0404 100%);
+  border: 2px solid #fcd34d;
+  border-radius: 10px;
+  padding: 2px 10px 4px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.8), inset 0 0 12px rgba(251, 191, 36, 0.35);
+}
+
+.marquee-subtitle {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  color: #fde68a;
+  text-shadow: 0 1px 3px #000;
+}
+
+.marquee-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-weight: 900;
+  font-size: 2.35rem;
+  line-height: 1.02;
+  letter-spacing: 0.06em;
+  background: linear-gradient(180deg, #ffffff 0%, #fff3a1 28%, #f59e0b 65%, #92400e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 3px 0 #3b0707) drop-shadow(0 5px 10px rgba(0,0,0,0.9));
+}
+
+/* Main Cabinet Body */
+.cabinet-body {
+  width: 100%;
+  background: linear-gradient(90deg, #1a1110 0%, #0d090a 12%, #090708 88%, #1a1110 100%);
+  border-left: 7px solid #2b1d19;
+  border-right: 7px solid #2b1d19;
+  padding: 12px 20px 12px;
+  position: relative;
+  box-shadow: inset 0 0 24px #000;
+}
+
+/* Glowing Side Neon Bars */
+.side-neon {
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  width: 6px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #ff6b00, #ffd080, #ff4500);
+  box-shadow: 0 0 12px #ff7b00, 0 0 22px rgba(255, 80, 0, 0.65);
+}
+
+.left-neon { left: 4px; }
+.right-neon { right: 4px; }
+
+/* Upper Tiered Jackpot Display Board */
+.jackpot-board {
+  background: radial-gradient(circle at 50% 30%, #1c1218 0%, #060508 100%);
+  border: 2.5px solid #d97706;
+  border-radius: 10px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow:
+    inset 0 0 18px rgba(0, 0, 0, 0.95),
+    0 0 12px rgba(245, 158, 11, 0.25);
+  margin-bottom: 10px;
+}
+
+.tier-row {
+  display: grid;
+  grid-template-columns: 128px 1fr;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 6px;
+  border-radius: 7px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tier-row.tier-hit {
+  animation: tierPulse 0.45s ease-in-out infinite alternate;
+}
+
+@keyframes tierPulse {
+  from { transform: scale(1); filter: brightness(1); }
+  to { transform: scale(1.03); filter: brightness(1.35); }
+}
+
+.tier-symbols {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.mini-stock-chip {
+  width: 38px;
+  height: 36px;
+  border-radius: 7px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 800;
+  font-size: 0.58rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.8), inset 0 1px 3px rgba(255,255,255,0.45);
+  position: relative;
+}
+
+.mini-stock-chip .chip-icon {
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.mini-stock-chip .chip-sym {
+  font-size: 0.52rem;
+  letter-spacing: 0.02em;
+  margin-top: 1px;
+}
+
+.tier-box {
+  border-radius: 6px;
+  padding: 3px 10px 4px;
+  text-align: center;
+  position: relative;
+  border: 1.5px solid #fbbf24;
+  box-shadow: inset 0 0 12px rgba(0,0,0,0.75);
+}
+
+.tier-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.tier-mult {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.66rem;
+  padding: 0 5px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.tier-amount {
+  font-family: 'Cinzel Decorative', 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: 1.2rem;
+  letter-spacing: 0.03em;
+  color: #fff7d6;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.95);
+}
+
+/* Tier Color Themes matching the image */
+.tier-grand .tier-box {
+  background: linear-gradient(180deg, #6b0f1a 0%, #2b0508 100%);
+  border-color: #fcd34d;
+}
+.tier-grand .tier-label { color: #fca5a5; }
+.tier-grand .tier-amount {
+  font-size: 1.34rem;
+  color: #fef08a;
+  text-shadow: 0 0 10px rgba(250, 204, 21, 0.55), 0 2px 3px #000;
+}
+
+.tier-major .tier-box {
+  background: linear-gradient(180deg, #064e3b 0%, #03221a 100%);
+  border-color: #6ee7b7;
+}
+.tier-major .tier-label { color: #6ee7b7; }
+
+.tier-minor .tier-box {
+  background: linear-gradient(180deg, #1e3a8a 0%, #0c193d 100%);
+  border-color: #93c5fd;
+}
+.tier-minor .tier-label { color: #93c5fd; }
+
+.tier-mini .tier-box {
+  background: linear-gradient(180deg, #0c4a6e 0%, #071e2e 100%);
+  border-color: #7dd3fc;
+}
+.tier-mini .tier-label { color: #7dd3fc; }
+
+/* Center 3-Reel Housing */
+.reel-housing {
+  background: linear-gradient(180deg, #27170e 0%, #120b07 100%);
+  border: 2.5px solid #d97706;
+  border-radius: 10px;
+  padding: 9px;
+  box-shadow: inset 0 0 16px #000;
+  margin-bottom: 10px;
+}
+
+.reel-frame {
+  position: relative;
+  background: #050505;
+  border: 3px solid #b45309;
+  border-radius: 8px;
+  padding: 4px 8px;
+  overflow: hidden;
+  box-shadow: inset 0 0 20px #000;
+}
+
+.payline-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 6;
+  color: #fde047;
+  font-size: 1.1rem;
+  text-shadow: 0 0 8px #f59e0b, 0 0 3px #000;
+  pointer-events: none;
+}
+
+.left-arrow { left: 2px; }
+.right-arrow { right: 2px; }
+
+.payline-beam {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  top: 50%;
+  height: 3px;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg, rgba(251, 191, 36, 0.85), rgba(255, 255, 255, 0.35), rgba(251, 191, 36, 0.85));
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.65);
+  z-index: 4;
+  pointer-events: none;
+  transition: all 0.25s ease;
+}
+
+.payline-beam.win-beam {
+  height: 5px;
+  background: linear-gradient(90deg, #ff2a2a, #fef08a, #22c55e, #fef08a, #ff2a2a);
+  box-shadow: 0 0 16px #fef08a, 0 0 28px #ef4444;
+}
+
+.reels-grid {
+  display: grid;
+  grid-template-columns: 1fr 6px 1fr 6px 1fr;
+  align-items: center;
+  height: 216px;
+}
+
+.reel-divider {
+  height: 100%;
+  background: linear-gradient(180deg, #451a03 0%, #fbbf24 50%, #451a03 100%);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.8);
+  z-index: 3;
+}
+
+/* Individual 3D Curved Reel Drum */
+.reel-drum {
+  position: relative;
+  height: 216px;
+  background: #f8f4e8;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.reel-strip {
+  display: flex;
+  flex-direction: column;
+  will-change: transform;
+}
+
+/* 3 visible symbols per drum: 72px height each = 216px total */
+.reel-cell {
+  height: 72px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 6px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  position: relative;
+}
+
+.stock-tile {
+  width: 100%;
+  height: 62px;
+  border-radius: 9px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 3px 6px rgba(0, 0, 0, 0.35),
+    inset 0 2px 4px rgba(255, 255, 255, 0.45);
+  padding: 2px 4px;
+}
+
+.stock-tile.win-highlight {
+  animation: symbolWinPulse 0.45s ease-in-out infinite alternate;
+}
+
+@keyframes symbolWinPulse {
+  0% { transform: scale(0.98); box-shadow: 0 0 8px #fde047; }
+  100% { transform: scale(1.05); box-shadow: 0 0 22px #fde047, inset 0 0 12px #fff; }
+}
+
+.stock-top-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.stock-logo-badge {
+  font-size: 1.05rem;
+  line-height: 1;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.65));
+}
+
+.stock-ticker-code {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: 1.18rem;
+  letter-spacing: 0.03em;
+  color: #ffffff;
+  text-shadow:
+    0 2px 0 rgba(0, 0, 0, 0.8),
+    0 0 8px rgba(255, 255, 255, 0.35);
+}
+
+.stock-sub-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 92%;
+  margin-top: 1px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.64rem;
+}
+
+.stock-company-name {
+  color: rgba(255, 255, 255, 0.88);
+  font-weight: 700;
+  text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stock-move-pill {
+  padding: 0 4px;
+  border-radius: 3px;
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.55);
+  color: #86efac;
+}
+
+.stock-move-pill.neg {
+  color: #fca5a5;
+}
+
+/* 3D Cylindrical Drum Lighting & Shadow Overlay */
+.reel-cylinder-gloss {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.72) 0%,
+    rgba(0, 0, 0, 0.24) 18%,
+    rgba(255, 255, 255, 0.18) 38%,
+    rgba(255, 255, 255, 0.0) 50%,
+    rgba(0, 0, 0, 0.22) 82%,
+    rgba(0, 0, 0, 0.74) 100%
+  );
+}
+
+/* Status Banner Under Reels */
+.status-ticker {
+  margin-top: 7px;
+  background: #080607;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 5px;
+  padding: 4px 8px;
+  text-align: center;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.76rem;
+  color: #fde68a;
+  letter-spacing: 0.04em;
+  min-height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-ticker .highlight {
+  color: #38bdf8;
+  font-weight: 700;
+  margin: 0 3px;
+}
+
+/* Red 7-Segment LED Panel (CREDITS | BET | WIN) */
+.led-panel {
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr 1.25fr;
+  gap: 8px;
+  background: linear-gradient(180deg, #171214 0%, #090708 100%);
+  border: 2px solid #78350f;
+  border-radius: 8px;
+  padding: 6px 8px 8px;
+}
+
+.led-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.led-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #fcd34d;
+  margin-bottom: 3px;
+}
+
+.led-screen {
+  width: 100%;
+  background: #070202;
+  border: 2px solid #451a03;
+  border-radius: 5px;
+  padding: 4px 8px;
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  box-shadow: inset 0 0 10px #000;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+.led-ghost {
+  position: absolute;
+  right: 8px;
+  color: var(--led-dim);
+  pointer-events: none;
+  letter-spacing: 0.06em;
+}
+
+.led-value {
+  position: relative;
+  z-index: 1;
+  color: var(--led-red);
+  text-shadow: 0 0 8px rgba(255, 46, 31, 0.85), 0 0 16px rgba(255, 46, 31, 0.45);
+  letter-spacing: 0.06em;
+  font-weight: 700;
+}
+
+/* Angled Control Deck (BET ONE, BET MAX, CASH OUT, SPIN) */
+.control-deck {
+  width: 104%;
+  position: relative;
+  z-index: 5;
+}
+
+.deck-surface {
+  background: linear-gradient(180deg, #2b1d1b 0%, #120c0d 55%, #231514 100%);
+  border-top: 3px solid #f59e0b;
+  border-left: 5px solid #78350f;
+  border-right: 5px solid #78350f;
+  border-radius: 10px 10px 4px 4px;
+  padding: 12px 18px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  box-shadow:
+    0 10px 20px rgba(0,0,0,0.85),
+    inset 0 2px 6px rgba(255, 255, 255, 0.2);
+}
+
+.square-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.deck-btn {
+  width: 72px;
+  height: 54px;
+  background: linear-gradient(180deg, #4b5563 0%, #1f2937 100%);
+  border: 2px solid #9ca3af;
+  border-radius: 9px;
+  padding: 3px;
+  cursor: pointer;
+  box-shadow:
+    0 6px 0 #090a0f,
+    0 8px 14px rgba(0, 0, 0, 0.85),
+    0 0 10px rgba(239, 68, 68, 0.35);
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+
+.deck-btn:active:not(:disabled) {
+  transform: translateY(4px);
+  box-shadow:
+    0 2px 0 #090a0f,
+    0 3px 6px rgba(0, 0, 0, 0.85);
+}
+
+.deck-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-cap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 25%, #2a1215 0%, #0d0607 100%);
+  border: 1.5px solid #ef4444;
+  border-radius: 5px;
+  color: #fff;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 800;
+  font-size: 0.68rem;
+  line-height: 1.15;
+  text-align: center;
+  letter-spacing: 0.05em;
+  box-shadow: inset 0 0 8px rgba(239, 68, 68, 0.45);
+}
+
+/* Round Glowing Red SPIN Button */
+.spin-button-well {
+  padding: 4px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #fde68a, #92400e, #fef08a);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.9), 0 0 18px rgba(239, 68, 68, 0.55);
+}
+
+.spin-btn {
+  width: 102px;
+  height: 68px;
+  border-radius: 50%;
+  border: 3px solid #fca5a5;
+  background: radial-gradient(circle at 50% 30%, #ff5252 0%, #dc2626 55%, #7f1d1d 100%);
+  cursor: pointer;
+  box-shadow:
+    0 7px 0 #450a0a,
+    0 10px 18px rgba(0, 0, 0, 0.9),
+    inset 0 3px 8px rgba(255, 255, 255, 0.65);
+  transition: transform 0.08s ease, box-shadow 0.08s ease, filter 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spin-btn:hover:not(:disabled) {
+  filter: brightness(1.12);
+}
+
+.spin-btn:active:not(:disabled) {
+  transform: translateY(5px);
+  box-shadow:
+    0 2px 0 #450a0a,
+    0 4px 8px rgba(0, 0, 0, 0.9),
+    inset 0 2px 5px rgba(255, 255, 255, 0.5);
+}
+
+.spin-btn:disabled {
+  filter: grayscale(0.35) brightness(0.75);
+  cursor: not-allowed;
+}
+
+.spin-cap {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: 1.3rem;
+  letter-spacing: 0.08em;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.85), 0 0 12px #fff;
+}
+
+.deck-chrome-lip {
+  height: 12px;
+  background: linear-gradient(90deg, #451a03, #fbbf24 22%, #fffbeb 50%, #fbbf24 78%, #451a03);
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.85);
+}
+
+/* Lower Cabinet & Blue Glowing Bill Acceptor */
+.cabinet-lower {
+  width: 96%;
+  background: linear-gradient(180deg, #0d090b 0%, #050405 100%);
+  border-left: 5px solid #291d1a;
+  border-right: 5px solid #291d1a;
+  border-bottom: 5px solid #291d1a;
+  border-radius: 0 0 12px 12px;
+  padding: 12px 18px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+
+.coin-tray-bay {
+  flex: 1;
+}
+
+.payout-chute {
+  height: 46px;
+  background: linear-gradient(180deg, #040404 0%, #171717 100%);
+  border: 1.5px solid #374151;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 4px 10px #000;
+}
+
+.chute-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.58rem;
+  letter-spacing: 0.14em;
+  color: #6b7280;
+}
+
+.bill-acceptor {
+  background: #070b14;
+  border: 1.5px solid #1e3a8a;
+  border-radius: 7px;
+  padding: 6px 12px;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 0 12px rgba(0, 168, 255, 0.25);
+}
+
+.bill-acceptor:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 18px rgba(0, 168, 255, 0.65);
+}
+
+.bill-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  color: #93c5fd;
+  margin-bottom: 4px;
+}
+
+.bill-slot-bezel {
+  background: #020617;
+  border: 2px solid var(--bill-blue);
+  border-radius: 4px;
+  padding: 4px 10px;
+  box-shadow: 0 0 10px var(--bill-blue), inset 0 0 8px rgba(0, 168, 255, 0.6);
+}
+
+.bill-slot-mouth {
+  height: 4px;
+  background: #e0f2fe;
+  border-radius: 2px;
+  box-shadow: 0 0 8px #38bdf8;
+  margin-bottom: 3px;
+}
+
+.bill-slot-arrows {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.56rem;
+  color: #38bdf8;
+  letter-spacing: 0.05em;
+}
+
+/* Modals (Paytable & Cash Out Voucher) */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(5px);
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+}
+
+.modal-backdrop.hidden {
+  display: none;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 620px;
+  background: linear-gradient(180deg, #1c1210 0%, #0d0809 100%);
+  border: 2px solid #f59e0b;
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.95);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.35);
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+}
+
+.modal-header h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.05rem;
+  color: #fde68a;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: #fca5a5;
+  font-size: 1.6rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal-desc {
+  font-size: 0.9rem;
+  color: #d1d5db;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.paytable-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.paytable-item {
+  display: grid;
+  grid-template-columns: 75px 1.2fr 0.9fr 1fr;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.86rem;
+}
+
+.combo-rules {
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+
+.combo-rules h3 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.8rem;
+  color: #fde68a;
+  margin-bottom: 6px;
+}
+
+.combo-rules ul {
+  padding-left: 18px;
+  font-size: 0.85rem;
+  color: #e5e7eb;
+  line-height: 1.5;
+}
+
+/* Casino Cashout TITO Ticket Voucher */
+.voucher-ticket {
+  width: 100%;
+  max-width: 420px;
+  background: #fdfbf7;
+  color: #111827;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+}
+
+.voucher-border {
+  border: 2px dashed #1f2937;
+  padding: 16px;
+  text-align: center;
+}
+
+.voucher-top {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  color: #4b5563;
+}
+
+.voucher-title {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: 1.05rem;
+  margin: 6px 0 10px;
+  color: #111827;
+}
+
+.voucher-amount {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #047857;
+  margin-bottom: 6px;
+}
+
+.voucher-meta {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+.voucher-barcode {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.5rem;
+  letter-spacing: 0.08em;
+  color: #111827;
+  margin-bottom: 14px;
+}
+
+.voucher-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.voucher-btn {
+  padding: 9px 14px;
+  border-radius: 6px;
+  border: 1px solid #374151;
+  background: #e5e7eb;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.voucher-btn.primary {
+  background: #047857;
+  color: #fff;
+  border-color: #065f46;
+}

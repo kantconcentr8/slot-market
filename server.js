@@ -4,7 +4,8 @@ const os = require('os');
 const path = require('path');
 
 const SYMBOLS = ['NVDA', 'TSLA', 'META', 'AMZN', 'MSFT', 'GOOGL', 'AAPL'];
-const MIN_REFRESH_COOLDOWN_MS = 60 * 1000; // 60s safety guard against accidental double-clicks (8 credits/min limit)
+const MIN_REFRESH_COOLDOWN_MS = 60 * 1000; // 60s safety guard on local dev
+const AUTO_REFRESH_TTL_MS = 4 * 60 * 60 * 1000; // 4-hour automatic refresh window (max ~3-4 calls/day)
 const IS_VERCEL = Boolean(process.env.VERCEL);
 
 const DISK_CACHE_PATH = IS_VERCEL
@@ -118,19 +119,20 @@ async function fetchTwelveDataQuotes(forceRefresh = false) {
   }
 
   const now = Date.now();
+  const isStale = !quoteCache.timestamp || now - quoteCache.timestamp > AUTO_REFRESH_TTL_MS;
 
-  // If not explicitly syncing and we already have a saved snapshot, serve it for 0 API credits
-  if (!forceRefresh && quoteCache.payload) {
+  // Serve cached snapshot if not stale and not forced on local dev
+  if (!forceRefresh && !isStale && quoteCache.payload) {
     return {
       ...quoteCache.payload,
       cached: true
     };
   }
 
-  // Protect against accidental double-clicks within 60 seconds (Twelve Data free tier = 8 credits/min)
+  // Protect against rapid calls within 60 seconds
   if (
-    forceRefresh &&
     quoteCache.payload &&
+    quoteCache.timestamp > 0 &&
     now - quoteCache.timestamp < MIN_REFRESH_COOLDOWN_MS
   ) {
     const waitSec = Math.ceil((MIN_REFRESH_COOLDOWN_MS - (now - quoteCache.timestamp)) / 1000);
@@ -229,15 +231,18 @@ const MIME_TYPES = {
 async function requestHandler(req, res) {
   const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
 
-  // API Endpoint: GET /api/quotes (pass ?refresh=1 to force a live Twelve Data sync)
+  // API Endpoint: GET /api/quotes
   if (parsedUrl.pathname === '/api/quotes') {
     const corsHeaders = {
       'Content-Type': 'application/json; charset=utf-8',
-      'Cache-Control': 'no-store',
+      'Cache-Control': IS_VERCEL
+        ? 'public, s-maxage=14400, stale-while-revalidate=86400'
+        : 'no-store',
       'Access-Control-Allow-Origin': '*'
     };
     try {
-      const forceRefresh = parsedUrl.searchParams.get('refresh') === '1';
+      // Only allow manual ?refresh=1 on local dev so public visitors cannot burn API credits
+      const forceRefresh = !IS_VERCEL && parsedUrl.searchParams.get('refresh') === '1';
       const result = await fetchTwelveDataQuotes(forceRefresh);
       res.writeHead(200, corsHeaders);
       res.end(JSON.stringify(result));

@@ -882,10 +882,18 @@ function initEvents() {
     setStatusBanner('💵 +1,000 CREDITS DEPOSITED VIA BILL ACCEPTOR!');
   });
 
-  const syncBtn = document.getElementById('btnSyncLive');
-  if (syncBtn) {
-    syncBtn.addEventListener('click', () => {
-      syncTwelveDataQuotes(true);
+  const howToPlayBtn = document.getElementById('btnHowToPlay');
+  if (howToPlayBtn) {
+    howToPlayBtn.addEventListener('click', () => {
+      audio.playButton();
+      document.getElementById('howToPlayModal').classList.remove('hidden');
+    });
+  }
+
+  const closeHowToPlayBtn = document.getElementById('closeHowToPlay');
+  if (closeHowToPlayBtn) {
+    closeHowToPlayBtn.addEventListener('click', () => {
+      document.getElementById('howToPlayModal').classList.add('hidden');
     });
   }
 
@@ -901,6 +909,16 @@ function initEvents() {
 
   document.getElementById('closePaytable').addEventListener('click', () => {
     document.getElementById('paytableModal').classList.add('hidden');
+  });
+
+  // Allow clicking backdrop overlay to close modals
+  ['howToPlayModal', 'paytableModal', 'cashoutModal'].forEach((modalId) => {
+    const el = document.getElementById(modalId);
+    if (el) {
+      el.addEventListener('click', (e) => {
+        if (e.target === el) el.classList.add('hidden');
+      });
+    }
   });
 
   document.getElementById('btnSound').addEventListener('click', (e) => {

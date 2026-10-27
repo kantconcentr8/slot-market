@@ -24,8 +24,8 @@
       <span id="marketStatusText">NASDAQ LIVE SIM • VOLATILITY MULTIPLIERS ACTIVE</span>
     </div>
     <div class="hud-actions">
-      <button class="hud-btn" id="btnSyncLive" title="Fetch latest live quotes from Twelve Data (.env.local)">
-        🔄 Sync 12 Data
+      <button class="hud-btn" id="btnHowToPlay" title="Learn how to play the Magnificent 7 Slot Machine">
+        ❓ How to Play
       </button>
       <button class="hud-btn" id="btnCatalyst" title="Trigger a random Wall Street market event">
         ⚡ Market Event
@@ -255,6 +255,55 @@
 
     </div>
   </main>
+
+  <!-- Modal: How to Play Guide -->
+  <div class="modal-backdrop hidden" id="howToPlayModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>🎰 HOW TO PLAY — MAG 7 SLOTS</h2>
+        <button class="modal-close" id="closeHowToPlay">&times;</button>
+      </div>
+      <p class="modal-desc">
+        Welcome to the <strong>Wall Street Magnificent 7 Slot Machine</strong>—where classic Las Vegas slots meet real US stock market momentum!
+      </p>
+      <div class="combo-rules" style="margin-bottom: 12px;">
+        <h3>1. Spin the Magnificent 7</h3>
+        <ul>
+          <li>Instead of cherries and 7s, the reels spin America's 7 biggest tech titans: <strong>NVDA, AAPL, MSFT, GOOGL, AMZN, META, and TSLA</strong>.</li>
+          <li>Press the red <strong>SPIN</strong> button (or hit <strong>Spacebar</strong>) to spin the 3 reels and line up symbols along the glowing center payline.</li>
+        </ul>
+      </div>
+      <div class="combo-rules" style="margin-bottom: 12px;">
+        <h3>2. Live Market Jackpot Tiers (Grand / Major / Minor / Mini)</h3>
+        <ul>
+          <li>The machine syncs with real market performance to rank all 7 stocks from <strong>#1 best daily % performer</strong> down to <strong>#7</strong>:</li>
+          <li><strong>GRAND JACKPOT:</strong> #1 Top Daily Gainer</li>
+          <li><strong>MAJOR JACKPOT:</strong> #2 &amp; #3 Momentum Stocks</li>
+          <li><strong>MINOR JACKPOT:</strong> #4 &amp; #5 Stocks</li>
+          <li><strong>MINI JACKPOT:</strong> #6 &amp; #7 Stocks</li>
+          <li>Bigger daily moves and higher volatility boost that stock's <strong>Payout Multiplier</strong>!</li>
+        </ul>
+      </div>
+      <div class="combo-rules" style="margin-bottom: 12px;">
+        <h3>3. How You Win</h3>
+        <ul>
+          <li><strong>3-of-a-Kind (e.g. TSLA • TSLA • TSLA):</strong> Wins that stock's active Tier Jackpot × Volatility Multiplier!</li>
+          <li><strong>AI Trio Bonus (NVDA + MSFT + GOOGL):</strong> Land all 3 AI leaders in any order on the center line for <strong>25× Bet</strong>!</li>
+          <li><strong>Sector Sweep (3 from Same Tier):</strong> Land 3 stocks sharing the same tier for <strong>15× Bet</strong>.</li>
+          <li><strong>Dividend Pair (Any 2 Matching Tickers):</strong> Pays <strong>3× Bet</strong> × Stock Multiplier.</li>
+        </ul>
+      </div>
+      <div class="combo-rules">
+        <h3>4. Controls &amp; Free Credits</h3>
+        <ul>
+          <li><strong>BET ONE / BET MAX:</strong> Adjust your wager (`10` to `250` credits) to scale up the jackpot board.</li>
+          <li><strong>⚡ Market Event:</strong> Trigger a breaking Wall Street catalyst to shake up stock rankings and boost multipliers!</li>
+          <li><strong>INSERT BILL / TICKET:</strong> Running low? Click the glowing blue slot at the bottom right anytime for <strong>+1,000 free credits</strong>.</li>
+          <li><strong>CASH OUT:</strong> Print your official Vegas Portfolio Voucher to see your session total!</li>
+        </ul>
+      </div>
+    </div>
+  </div>
 
   <!-- Modal: Mag 7 Live Rankings & Paytable -->
   <div class="modal-backdrop hidden" id="paytableModal">

@@ -1,17 +1,13 @@
-const fs = require('fs');
-const path = require('path');
-
 const SYMBOLS = ['NVDA', 'TSLA', 'META', 'AMZN', 'MSFT', 'GOOGL', 'AAPL'];
 
-export default async function handler(req, res) {
-  // Set CORS headers
+module.exports = async function handler(req, res) {
+  // Set CORS and edge caching headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
-  res.setHeader('Cache-Control', 's-maxage=14400, stale-while-revalidate=86400'); // Edge cache 4 hours
+  res.setHeader('Cache-Control', 's-maxage=14400, stale-while-revalidate=86400'); // Cache for 4 hours on Vercel CDN
 
   const apiKey = (process.env.TWELVE_DATA_API_KEY || '').trim();
 
-  // If no API key configured on Vercel yet, try fallback snapshot or mock
   if (!apiKey) {
     return res.status(200).json({
       status: 'missing_key',
@@ -72,4 +68,4 @@ export default async function handler(req, res) {
   } catch (err) {
     return res.status(500).json({ status: 'error', message: err.message });
   }
-}
+};

@@ -2,7 +2,6 @@
   "name": "mag7-jackpot-slots",
   "version": "1.0.0",
   "description": "Magnificent 7 Wall Street Vegas Slot Machine with Live Twelve Data API",
-  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "node server.js"
